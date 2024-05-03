@@ -1,8 +1,18 @@
+import subprocess 
 from script_dataaug import *
 from script_projet import *
-#!pip install -r requirements.txt 
 
 def main():
+    # Installe les dépendances à partir du fichier requirements.txt
+    command = "pip install -r requirements.txt"
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+
+    if process.returncode == 0:
+        print(f"Requirements installed successfully:\n{stdout.decode('utf-8')}")
+    else:
+        print(f"Error installing requirements:\n{stderr.decode('utf-8')}")
+
     """Fonction principale pour l'augmentation des images."""
     # Compter les images avant augmentation
     compter_images('../IRM', 'non')
@@ -21,6 +31,8 @@ def main():
     compter_images('../data_aug', 'non_test')
     compter_images('../data_aug', 'oui')
     compter_images('../data_aug', 'oui_test')
+
+
     """Fonction principale pour le traitement des images."""
     # Charger les images
     data, label, data_test, label_test = charger_images(pathlib.Path('../data_aug'))
@@ -58,7 +70,6 @@ def main():
             print('#################( Clf )#####################')
             print(chemin_complet)
             print('#################( Clf )#####################')
-            # Remplacer 'CNN' par le modèle approprié et 'type_modele' par 'cnn', 'vgg16' ou 'rf'
             prediction_generique(Clf, chemin_complet, type_modele='clf')   
     
 
@@ -68,7 +79,6 @@ def main():
             print('#################( CNN )#####################')
             print(chemin_complet)
             print('#################( CNN )#####################')
-            # Remplacer 'CNN' par le modèle approprié et 'type_modele' par 'cnn', 'vgg16' ou 'rf'
             prediction_generique(CNN, chemin_complet, type_modele='CNN')
    
     for fichier in os.listdir(dossier_images):
@@ -77,10 +87,6 @@ def main():
             print('###################( VGG16 )###################')
             print(chemin_complet)
             print('###################( VGG16 )###################')
-            # Remplacer 'CNN' par le modèle approprié et 'type_modele' par 'cnn', 'vgg16' ou 'rf'
             prediction_generique(model_VGG16, chemin_complet, type_modele='cnn')
-    
-    # Autres parties du script original peuvent être intégrées ici de manière similaire...
-
 if __name__ == "__main__":
     main()
